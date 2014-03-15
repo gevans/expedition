@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'expedition'
+
+puts JSON.pretty_generate(Expedition.new.send(*ARGV).to_hash)
