@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Expedition::VERSION
   spec.authors       = ['Gabe Evans']
   spec.email         = ['gabe@ga.be']
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Expedition is an implementation of the cgminer client protocol. It allows you to write programs that interact with cgminer and cgminer-compatible software.}
+  spec.description   = spec.summary
   spec.homepage      = 'https://github.com/gevans/expedition'
   spec.license       = 'MIT'
 
