@@ -18,7 +18,6 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = %w(lib)
 
-  spec.add_dependency 'hashie',        '~> 2.0'
   spec.add_dependency 'multi_json',    '~> 1.3'
   spec.add_dependency 'activesupport', '~> 4.0'
 
