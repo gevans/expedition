@@ -5,8 +5,16 @@ The goal of this project is to offer Rubyists easier integration with the
 [cgminer API](https://github.com/ckolivas/cgminer/blob/master/API-README) “the
 Ruby way.”
 
-tl;dr This gem lets you interact with cgminer’s API the way a Ruby hipster would
-want to.
+**tl;dr** This gem lets you interact with cgminer’s API the way a Ruby hipster
+would want to.
+
+Now for some fancy badges:
+
+[![Gem Version](https://badge.fury.io/rb/expedition.png)](http://badge.fury.io/rb/expedition)
+[![Dependency Status](https://gemnasium.com/gevans/expedition.png)](https://gemnasium.com/gevans/expedition)
+[![Build Status](https://travis-ci.org/gevans/expedition.png?branch=master)](https://travis-ci.org/gevans/expedition)
+[![Code Climate](https://codeclimate.com/github/gevans/expedition.png)](https://codeclimate.com/github/gevans/expedition)
+[![Coverage Status](https://coveralls.io/repos/gevans/expedition/badge.png?branch=master)](https://coveralls.io/r/gevans/expedition?branch=master)
 
 ## Installation
 
