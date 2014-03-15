@@ -1,5 +1,3 @@
-require 'hashie'
-
 require 'expedition/status'
 
 module Expedition
