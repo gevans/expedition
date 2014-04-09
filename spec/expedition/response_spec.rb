@@ -45,8 +45,9 @@ describe Expedition::Response do
           'Last Valid Work' => 1394735379,
           'Device Hardware%' => 0.3998,
           'Device Rejected%' => 0.4283,
-          'Device Elapsed' => 178612,
-          'Inconsistent-Bullshit' => 'teehee'
+          'Device*Elapsed' => 178612,
+          '*Inconsistent-Bullshit*' => 'teehee',
+          '*Dev-* Throttle***' => 0
         }
       ],
       'id' => 1
@@ -97,7 +98,8 @@ describe Expedition::Response do
           device_hardware_percent: 0.3998,
           device_rejected_percent: 0.4283,
           device_elapsed: 178612,
-          inconsistent_bullshit: 'teehee'
+          inconsistent_bullshit: 'teehee',
+          dev_throttle: 0
         }
       ],
       id: 1
