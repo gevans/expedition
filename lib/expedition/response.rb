@@ -50,7 +50,7 @@ module Expedition
     end
 
     def self.normalize_key(key)
-      key.gsub(/(\w)%/, '\\1_percent').gsub('%', 'percent').gsub(/\s/, '_').downcase.to_sym
+      key.gsub(/(\w)%/, '\\1_percent').gsub('%', 'percent').gsub(/\s|\-/, '_').downcase.to_sym
     end
   end # Response
 end # Expedition
