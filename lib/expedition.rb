@@ -1,10 +1,18 @@
-require 'active_support'
-require 'active_support/core_ext'
+require 'active_support/core_ext/module/delegation'
 
 require 'expedition/client'
 require 'expedition/version'
 
 module Expedition
+
+  class << self
+    ##
+    # @return [Client]
+    #   A client for accessing the API of a cgminer-compatible service.
+    attr_accessor :client
+
+    delegate(*Client.public_instance_methods(false), to: :client)
+  end
 
   ##
   # Initializes a new {Expedition::Client}.
