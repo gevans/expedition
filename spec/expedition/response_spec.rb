@@ -103,7 +103,7 @@ describe Expedition::Response do
         }
       ],
       id: 1
-    }
+    }.with_indifferent_access
   end
 
   let(:response) do
@@ -148,7 +148,7 @@ describe Expedition::Response do
         expect(status).to be_success
 
         expect(status).not_to be_info
-        expect(status).not_to be_warning
+        expect(status).not_to be_warn
         expect(status).not_to be_info
         expect(status).not_to be_info
         expect(status).not_to be_info
@@ -169,7 +169,7 @@ describe Expedition::Response do
         expect(status).to be_info
 
         expect(status).not_to be_success
-        expect(status).not_to be_warning
+        expect(status).not_to be_warn
         expect(status).not_to be_error
         expect(status).not_to be_fatal
       end
@@ -179,14 +179,14 @@ describe Expedition::Response do
       end
     end
 
-    context 'when warning' do
+    context 'when warn' do
 
       before do
         original_data['STATUS'].first['STATUS'] = 'W'
       end
 
       it 'is warning' do
-        expect(status).to be_warning
+        expect(status).to be_warn
 
         expect(status).not_to be_success
         expect(status).not_to be_info
@@ -210,7 +210,7 @@ describe Expedition::Response do
 
         expect(status).not_to be_success
         expect(status).not_to be_info
-        expect(status).not_to be_warning
+        expect(status).not_to be_warn
         expect(status).not_to be_fatal
       end
 
@@ -230,7 +230,7 @@ describe Expedition::Response do
 
         expect(status).not_to be_success
         expect(status).not_to be_info
-        expect(status).not_to be_warning
+        expect(status).not_to be_warn
         expect(status).not_to be_error
       end
 
@@ -240,7 +240,7 @@ describe Expedition::Response do
     end
   end
 
-  %i(success? informational? warning? error? fatal? executed_at).each do |method_name|
+  %i(success? info? warn? error? fatal? ok? executed_at).each do |method_name|
 
     describe "##{method_name}" do
 
@@ -251,7 +251,7 @@ describe Expedition::Response do
     end
   end
 
-  %i([] to_hash).each do |method_name|
+  %i([] to_h to_hash to_a to_ary).each do |method_name|
 
     describe "##{method_name}" do
 
@@ -264,28 +264,15 @@ describe Expedition::Response do
 
   describe '#respond_to_missing?' do
 
-    let(:response) do
-      described_class.new(body, {})
-    end
-
-    context 'when #body has key' do
-
-      let(:body) do
-        {
-          foo: 'blah'
-        }
-      end
+    context 'when #body responds' do
 
       it 'returns true' do
+        expect(response.body).to receive(:respond_to?).with(:foo).and_return(true)
         expect(response).to respond_to(:foo)
       end
     end
 
-    context 'when #body does not have key' do
-
-      let(:body) do
-        {}
-      end
+    context 'when #body does not respond' do
 
       it 'returns false' do
         expect(response).not_to respond_to(:foo)
@@ -295,18 +282,19 @@ describe Expedition::Response do
 
   describe '#method_missing' do
 
-    context 'when key in #body' do
+    context 'when #body responds' do
 
       before do
-        allow(response).to receive(:body).and_return(something: 'stuff')
+        allow(response.body).to receive(:respond_to?).and_return(true)
+        allow(response.body).to receive(:something).and_return('stuff')
       end
 
-      it 'returns value' do
+      it 'returns method call' do
         expect(response.something).to eq('stuff')
       end
     end
 
-    context 'when not key in #body' do
+    context 'when #body does not respond' do
 
       it 'raises NoMethodError' do
         expect {

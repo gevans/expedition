@@ -56,7 +56,7 @@ describe Expedition::Client do
         expect(socket).to receive(:gets).and_return(%/{"what a":["body"]}\x0/)
         result = client.__send__(method_name, 'foo', 'bar', 'baz')
         expect(result.body).to eq(
-          what_a: ['body']
+          'what_a' => ['body']
         )
       end
     end

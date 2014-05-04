@@ -4,12 +4,12 @@ module Expedition
     SEVERITIES = {
       'S' => :success,
       'I' => :info,
-      'W' => :warning,
+      'W' => :warn,
       'E' => :error,
       'F' => :fatal
     }.freeze
 
-    OK_SEVERITIES = %i(success info warning).freeze
+    OK_SEVERITIES = %i(success info warn).freeze
 
     attr_reader :severity
 
@@ -22,13 +22,13 @@ module Expedition
     attr_reader :executed_at
 
     def initialize(body)
-      status = body.try(:first) || {}
+      status = body ? body.first : {}
 
-      @severity    = SEVERITIES[status[:status]]
-      @code        = status[:code]
-      @message     = status[:msg]
-      @description = status[:description]
-      @executed_at = Time.at(status[:when]) rescue nil
+      @severity    = SEVERITIES[status['STATUS']]
+      @code        = status['Code']
+      @message     = status['Msg']
+      @description = status['Description']
+      @executed_at = Time.at(status['When']) rescue nil
     end
 
     def success?
@@ -39,8 +39,8 @@ module Expedition
       severity == :info
     end
 
-    def warning?
-      severity == :warning
+    def warn?
+      severity == :warn
     end
 
     def error?

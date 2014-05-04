@@ -29,6 +29,27 @@ module Expedition
       @port = port
     end
 
+    def devices
+      send(:devdetails) do |body|
+        body[:devdetails].collect { |attrs|
+          attrs.delete(:devdetails)
+          attrs[:variant] = attrs.delete(:name).downcase
+          attrs
+        }
+      end
+    end
+
+    def metrics
+      send(:devs) do |body|
+        body[:devs].collect { |attrs|
+          attrs.merge(
+            enabled: attrs[:enabled] == 'Y',
+            status: attrs[:status].downcase
+          )
+        }
+      end
+    end
+
     ##
     # Sends the supplied `command` with optionally supplied `parameters` to the
     # service and returns the result, if any.
@@ -44,21 +65,21 @@ module Expedition
     #
     # @return [Response]
     #   The service's response.
-    def send(command, *parameters)
+    def send(command, *parameters, &block)
       socket = TCPSocket.new(host, port)
       socket.puts command_json(command, *parameters)
 
-      parse(socket.gets)
+      parse(socket.gets, &block)
     ensure
       socket.close if socket.respond_to?(:close)
     end
 
-    alias method_missing send
+    alias_method :method_missing, :send
 
     private
 
-    def parse(response)
-      Response.parse(MultiJson.load(response.chomp("\x0")))
+    def parse(response, &block)
+      Response.parse(MultiJson.load(response.chomp("\x0")), &block)
     end
 
     def command_json(command, *parameters)
