@@ -41,12 +41,7 @@ module Expedition
 
     def metrics
       send(:devs) do |body|
-        body[:devs].collect { |attrs|
-          attrs.merge(
-            enabled: attrs[:enabled] == 'Y',
-            status: attrs[:status].downcase
-          )
-        }
+        body[:devs].collect(&method(:parse_metrics))
       end
     end
 
@@ -84,6 +79,23 @@ module Expedition
 
     def command_json(command, *parameters)
       MultiJson.dump(command: command, parameter: parameters.join(','))
+    end
+
+    def parse_metrics(attrs)
+      attrs.merge!(
+        enabled: attrs[:enabled] == 'Y',
+        status: attrs[:status].downcase,
+        last_share_time: (Time.at(attrs[:last_share_time]) rescue attrs[:last_share_time]),
+        last_valid_work: (Time.at(attrs[:last_valid_work]) rescue attrs[:last_valid_work])
+      )
+
+      interval = attrs.keys.detect { |k| k =~ /^mhs_\d+s$/ }[/\d+s$/]
+
+      # Remove the `_Ns` suffix from hash rate fields.
+      attrs.merge!(
+        mhs: attrs.delete("mhs_#{interval}"),
+        khs: attrs.delete("khs_#{interval}")
+      )
     end
   end # Client
 end # Expedition
