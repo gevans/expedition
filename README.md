@@ -34,7 +34,49 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+A client can be initialized with an optional host and port (defaulting to
+`localhost`, port `4028`):
+
+```ruby
+client = Expedition.new(host, port)
+```
+
+Querying is done by calling the method you wish to send:
+
+```ruby
+response = client.pools
+# => #<Expedition::Response ...>
+
+response.body
+# => [{"pool"=>0,
+#  "url"=>"stratum+tcp://pool.example.com:3333",
+#  "status"=>"alive"
+#  ...}]
+
+response.status
+# => #<Expedition::Status
+#  @code=7
+#  @description="sgminer 4.1.153",
+#  @executed_at=2014-05-13 17:51:53 -0700,
+#  @message="1 Pool(s)",
+#  @severity=:success>>
+
+response.ok?
+# => true
+```
+
+## Supported API Methods
+
+Expedition overrides `#method_missing` to allow sending *any* method to a
+running miner. For convenience and additional sugar, the following methods are
+implemented which offer parsed timestamps, and more consistent responses:
+
+* `#devices` - Detailed information about devices.
+* `#metrics` - Detailed statistics for all devices.
+* `#pools` - Pool information and statistics.
+
+In need of another method?
+[Open an issue](https://github.com/gevans/expedition/issues/new).
 
 ## Contributing
 
