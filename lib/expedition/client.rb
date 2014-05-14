@@ -45,6 +45,12 @@ module Expedition
       end
     end
 
+    def pools
+      send(:pools) do |body|
+        body[:pools].collect(&method(:parse_pool))
+      end
+    end
+
     ##
     # Sends the supplied `command` with optionally supplied `parameters` to the
     # service and returns the result, if any.
@@ -95,6 +101,14 @@ module Expedition
       attrs.merge!(
         mhs: attrs.delete("mhs_#{interval}"),
         khs: attrs.delete("khs_#{interval}")
+      )
+    end
+
+    def parse_pool(attrs)
+      attrs.merge!(
+        status: attrs[:status].downcase,
+        long_poll: attrs[:long_poll] != 'N',
+        last_share_time: (Time.at(attrs[:last_share_time]) rescue attrs[:last_share_time]),
       )
     end
   end # Client

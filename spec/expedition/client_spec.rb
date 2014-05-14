@@ -177,7 +177,7 @@ describe Expedition::Client do
             'STATUS' => 'S',
             'When' => 1399419744,
             'Code' => 9,
-            'Msg' => '3 GPU(s)',
+            'Msg' => '1 GPU(s)',
             'Description' => 'sgminer 4.1.153'
           }
         ],
@@ -259,6 +259,111 @@ describe Expedition::Client do
         'temperature' => 68.0,
         'total_mh' => 10.1489,
         'utility' => 10.8166
+      ])
+    end
+  end
+
+  describe '#pools' do
+
+    subject(:pools) do
+      client.pools
+    end
+
+    let(:client) do
+      described_class.new
+    end
+
+    let(:socket) do
+      double(TCPSocket)
+    end
+
+    let(:response) do
+      {
+        'STATUS' => [
+          {
+            'STATUS' => 'S',
+            'When' => 1400026784,
+            'Code' => 7,
+            'Msg' => '1 Pool(s)',
+            'Description' => 'sgminer 4.1.153'
+          }
+        ],
+        'POOLS' => [
+          {
+            'POOL' => 0,
+            'URL' => 'stratum+tcp://us-west2.multipool.us:3352',
+            'Status' => 'Alive',
+            'Priority' => 0,
+            'Quota' => 1,
+            'Long Poll' => 'N',
+            'Getworks' => 31,
+            'Accepted' => 413,
+            'Rejected' => 0,
+            'Works' => 206,
+            'Discarded' => 1256,
+            'Stale' => 0,
+            'Get Failures' => 0,
+            'Remote Failures' => 0,
+            'User' => 'nobody',
+            'Last Share Time' => 1400026781,
+            'Diff1 Shares' => 52523,
+            'Proxy Type' => '',
+            'Proxy' => '',
+            'Difficulty Accepted' => 52864.0,
+            'Difficulty Rejected' => 0.0,
+            'Difficulty Stale' => 0.0,
+            'Last Share Difficulty' => 128.0,
+            'Has Stratum' => true,
+            'Stratum Active' => true,
+            'Stratum URL' => 'us-west2.multipool.us',
+            'Has GBT' => false,
+            'Best Share' => 22673,
+            'Pool Rejected%' => 0.0,
+            'Pool Stale%' => 0.0
+          }
+        ],
+        'id' => 1
+      }.to_json
+    end
+
+    before do
+      allow(TCPSocket).to receive(:new).with(client.host, client.port).and_return(socket)
+      allow(socket).to receive(:puts)
+      allow(socket).to receive(:gets).and_return(response)
+    end
+
+    specify do
+      expect(pools.body).to eq([
+        'pool' => 0,
+        'url' => 'stratum+tcp://us-west2.multipool.us:3352',
+        'status' => 'alive',
+        'priority' => 0,
+        'quota' => 1,
+        'long_poll' => false,
+        'getworks' => 31,
+        'accepted' => 413,
+        'rejected' => 0,
+        'works' => 206,
+        'discarded' => 1256,
+        'stale' => 0,
+        'get_failures' => 0,
+        'remote_failures' => 0,
+        'user' => 'nobody',
+        'last_share_time' => Time.utc(2014, 05, 14, 0, 19, 41),
+        'diff1_shares' => 52523,
+        'proxy_type' => '',
+        'proxy' => '',
+        'difficulty_accepted' => 52864.0,
+        'difficulty_rejected' => 0.0,
+        'difficulty_stale' => 0.0,
+        'last_share_difficulty' => 128.0,
+        'has_stratum' => true,
+        'stratum_active' => true,
+        'stratum_url' => 'us-west2.multipool.us',
+        'has_gbt' => false,
+        'best_share' => 22673,
+        'pool_rejected_percent' => 0.0,
+        'pool_stale_percent' => 0.0
       ])
     end
   end
