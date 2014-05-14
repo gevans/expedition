@@ -29,6 +29,12 @@ module Expedition
       @port = port
     end
 
+    ##
+    # Sends the `devdetails` command, returning an array of devices found in the
+    # service's response.
+    #
+    # @return [Response]
+    #   An array of devices.
     def devices
       send(:devdetails) do |body|
         body[:devdetails].collect { |attrs|
@@ -39,12 +45,24 @@ module Expedition
       end
     end
 
+    ##
+    # Sends the `devs` command, returning an array of metrics found in the
+    # service's response.
+    #
+    # @return [Response]
+    #   An array of metrics.
     def metrics
       send(:devs) do |body|
         body[:devs].collect(&method(:parse_metrics))
       end
     end
 
+    ##
+    # Sends the `pools` command, returning an array of pools found in the
+    # service's response.
+    #
+    # @return [Response]
+    #   An array of pools.
     def pools
       send(:pools) do |body|
         body[:pools].collect(&method(:parse_pool))
