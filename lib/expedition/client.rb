@@ -67,7 +67,7 @@ module Expedition
     # @return [Response]
     #   The service's response.
     def send(command, *parameters, &block)
-      socket = TCPSocket.new(host, port)
+      socket = TCPSocket.open(host, port)
       socket.puts command_json(command, *parameters)
 
       parse(socket.gets, &block)

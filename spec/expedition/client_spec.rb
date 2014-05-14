@@ -42,7 +42,7 @@ describe Expedition::Client do
       end
 
       before do
-        allow(TCPSocket).to receive(:new).with(client.host, client.port).and_return(socket)
+        allow(TCPSocket).to receive(:open).and_return(socket)
       end
 
       it 'sends supplied command and parameters to configured host and port' do
@@ -121,7 +121,7 @@ describe Expedition::Client do
     end
 
     before do
-      allow(TCPSocket).to receive(:new).with(client.host, client.port).and_return(socket)
+      allow(TCPSocket).to receive(:open).and_return(socket)
       allow(socket).to receive(:puts)
       allow(socket).to receive(:gets).and_return(response)
     end
@@ -221,7 +221,7 @@ describe Expedition::Client do
     end
 
     before do
-      allow(TCPSocket).to receive(:new).with(client.host, client.port).and_return(socket)
+      allow(TCPSocket).to receive(:open).and_return(socket)
       allow(socket).to receive(:puts)
       allow(socket).to receive(:gets).and_return(response)
     end
@@ -327,7 +327,7 @@ describe Expedition::Client do
     end
 
     before do
-      allow(TCPSocket).to receive(:new).with(client.host, client.port).and_return(socket)
+      allow(TCPSocket).to receive(:open).and_return(socket)
       allow(socket).to receive(:puts)
       allow(socket).to receive(:gets).and_return(response)
     end
